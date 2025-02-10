@@ -6,18 +6,30 @@ import os
 
 
 
-class mainWindow:
-    def __init__(self, root):
-        self.container = ttk.Frame(root) #container
-        root.title("pervcore")
-        self.container.pack()
+class MainWindow(TkinterDnD.Tk): 
+    #Let MainWindow be the child class of TkinterDnD.Tk allows us to copy functionality of TkinterDnD.Tk and define our own additonal stuff - kj
+    def __init__(self, title="Pervcore", window_size="500x500", dnd_event="<<DROP>>"): #allows us to recall this function and but set these as parameters for now - kj
+        super().__init__() #initialize parent class - kj
 
-# Make sure drag and drop events are triggered for the entire window
-        root.drop_target_register(DND_FILES)
-        root.dnd_bind("<<DROP>>", self.drop)
+        # Set window title and size dynamically
+        self.title(title)
+        self.geometry(window_size)
 
-        self.pad_1 = Pad(root)
-        self.pad_1.pack(pady=100)
+        # Drag-and-drop configuration
+        self.drop_target_register(DND_FILES)
+        self.dnd_bind(dnd_event, self.drop)  # Allow custom event names
+
+        # Main container for widgets
+        self.container = ttk.Frame(self)
+        self.container.pack(expand=True, pady=50)
+
+        # Add the pad button inside the container
+        self.pad = Pad(self.container)
+        self.pad.pack(pady=50)
+
+    def drop(self, event):
+        print("Main Window Drop event triggered!")
+        self.pad.drop(event)  # Pass event to the Pad
         
         
 
@@ -25,9 +37,7 @@ class mainWindow:
         print("Main Window Drop event triggered!")  # Debugging line to confirm event firing
         # Forward to pad's drop method
         self.pad_1.drop(event)
-
-
-
+        
 class Pad(ttk.Button):
     def __init__(self, master, **kw): #pass through arguments to tk.Button class upon initilization
         print ("pad initilized")
@@ -68,7 +78,6 @@ class Pad(ttk.Button):
 
 
 if __name__ == "__main__":
-    root = TkinterDnD.Tk()
-    root.geometry("500x500")
     pervcore = mainWindow(root)
-    root.mainloop()
+    pervcore.mainloop()
+
