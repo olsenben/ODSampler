@@ -28,8 +28,8 @@ class waveformEditor(tk.Frame):
         super().__init__(master, **kw)
 
         self.audio_path = audio_path
-        self.playback_start = 0
-        self.playback_end =  0
+        self.playback_start = 0 #define default behavior
+        self.playback_end =  0 
 
         self.create_graph()
 
@@ -38,6 +38,17 @@ class waveformEditor(tk.Frame):
         plt.suptitle(f"start pos: {x:0.2f}", x=0.5, y=0.01, ha='center', va='bottom')
         self.playback_start = x
 
+    def update_waveform(self, new_file_path):
+        self.audio_path = new_file_path
+        self.playback_start = 0
+        self.playback_end = 0
+
+        for widget in self.winfor_children():
+            widget.destroy()
+
+    
+        self.create_graph()
+        
     def create_graph(self): 
         
         # reading the audio file 

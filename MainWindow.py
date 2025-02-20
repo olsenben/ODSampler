@@ -3,12 +3,12 @@ from tkinter import ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES #make sure to pip install tkinterdnd2-universal
 import pygame
 import os
-from pads import Pad
+from Pad import Pad
 
 
 class mainWindow(TkinterDnD.Tk): 
     #Let MainWindow be the child class of TkinterDnD.Tk allows us to copy functionality of TkinterDnD.Tk and define our own additonal stuff - kj
-    def __init__(self, title="Pervcore", window_size="800x600"): #allows us to recall this function and but set these as parameters for now - kj
+    def __init__(self, title="ODSampler", window_size="800x600"): #allows us to recall this function and but set these as parameters for now - kj
         super().__init__() #initialize parent class - kj
 
         # Set window title and size dynamically
@@ -18,7 +18,10 @@ class mainWindow(TkinterDnD.Tk):
         
         # Mframe for waveform editors
         self.display_frame = ttk.Frame(self, height=200)
-        self.display_frame.pack(fill=tk.X)
+        self.display_frame.pack(fill=tk.X, pady=5)
+
+        #dict to store waveform_editors
+        self.waveform_editors = {}
 
         #frame for pads
         self.pads_frame = ttk.Frame(self)
@@ -33,13 +36,14 @@ class mainWindow(TkinterDnD.Tk):
                 pad.grid(row=i, column=j,padx=10, pady=10)
                 self.pads.append(pad)
 
+    def show_editor(self, pad_id):
+        """raise te waveform editor associated with pad"""
+        if pad_id in self.waveform_editors:
+            editor = self.waveform_editors[pad_id]
+            editor.lift()
 
-        
-   
 
-
-    
 
 if __name__ == "__main__":
-    pervcore = mainWindow()
-    pervcore.mainloop()
+    ODSampler = mainWindow()
+    ODSampler.mainloop()
