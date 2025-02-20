@@ -34,8 +34,13 @@ class Pad(ttk.Button):
         self.controller = controller
         self.drop_target_register(DND_FILES)
         self.dnd_bind('<<Drop>>', lambda event: self.drop(event, controller))
-        self.config(command=self.play_audio)
+        self.config(command=self.on_trigger)
 
+    def on_trigger(self):
+        if self.audio_path:
+            self.play_audio()
+       
+        self.controller.show_editor(self.pad_id)
 
     def drop(self, event, controller):
         print("Drop event triggered")  # Debugging line to check if the event is fired
@@ -57,7 +62,6 @@ class Pad(ttk.Button):
             controller.waveform_editors[self.pad_id].update_waveform(file_path)
         else:
             editor = waveformEditor(controller.display_frame,file_path)
-            editor.pack(fill=tk.X, pady=5)
             controller.waveform_editors[self.pad_id] = editor
 
         controller.show_editor(self.pad_id)

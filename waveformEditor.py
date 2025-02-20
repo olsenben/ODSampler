@@ -43,12 +43,12 @@ class waveformEditor(tk.Frame):
         self.playback_start = 0
         self.playback_end = 0
 
-        for widget in self.winfor_children():
+        for widget in self.winfo_children():
             widget.destroy()
 
     
         self.create_graph()
-        
+
     def create_graph(self): 
         
         # reading the audio file 

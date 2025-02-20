@@ -22,6 +22,7 @@ class mainWindow(TkinterDnD.Tk):
 
         #dict to store waveform_editors
         self.waveform_editors = {}
+        self.active_editor = None
 
         #frame for pads
         self.pads_frame = ttk.Frame(self)
@@ -39,8 +40,11 @@ class mainWindow(TkinterDnD.Tk):
     def show_editor(self, pad_id):
         """raise te waveform editor associated with pad"""
         if pad_id in self.waveform_editors:
+            if self.active_editor:
+                self.active_editor.place_forget() #hide acitve editor
             editor = self.waveform_editors[pad_id]
-            editor.lift()
+            editor.place(relx=0, rely=0, relwidth=1, relheight=1) #make it visible
+            self.active_editor = editor
 
 
 
