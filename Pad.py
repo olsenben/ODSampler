@@ -6,51 +6,34 @@ import os
 from waveformEditor import waveformEditor
 
 
-
-
-"""class mainWindow(TkinterDnD.Tk): 
-    #Let MainWindow be the child class of TkinterDnD.Tk allows us to copy functionality of TkinterDnD.Tk and define our own additonal stuff - kj
-    def __init__(self, title="Pervcore", window_size="500x500"): #allows us to recall this function and but set these as parameters for now - kj
-        super().__init__() #initialize parent class - kj
-
-        # Set window title and size dynamically
-        self.title(title)
-        self.geometry(window_size)
-
-        
-        # Main container for widgets
-        self.container = ttk.Frame(self)
-        self.container.pack(expand=True, pady=50)
-
-        # Add the pad button inside the container
-        pad = Pad(self.container)
-        pad.pack(pady=50)
-"""
 class Pad(ttk.Button):
-    def __init__(self, master, controller, pad_id, **kw): #pass through arguments to tk.Button class upon initilization
+    """a pad that initalizes a waveform editor when a file is dropped on it"""
+    def __init__(self, master, controller, pad_id, **kw): #master is the frame for the pads, controller is mainwindow
         super().__init__(master, **kw)
         self.audio_path = None
         self.pad_id = pad_id
         self.controller = controller
-        self.drop_target_register(DND_FILES)
-        self.dnd_bind('<<Drop>>', lambda event: self.drop(event, controller))
-        self.config(command=self.on_trigger)
+        self.drop_target_register(DND_FILES) #enable filedrop
+        self.dnd_bind('<<Drop>>', lambda event: self.drop(event, controller)) #trigger file drop
+        self.config(text=str(pad_id), command=self.on_trigger)
 
     def on_trigger(self):
+        """wrapper function"""
         if self.audio_path:
             self.play_audio()
-       
+
+        #raises the waveform editor in the main window
         self.controller.show_editor(self.pad_id)
 
     def drop(self, event, controller):
-        print("Drop event triggered")  # Debugging line to check if the event is fired
-
+        """salves file path and initalizes waveform editor"""
         file_path = event.data
         if file_path.startswith('{') and file_path.endswith('}'):
             file_path = file_path[1:-1]
         self.audio_path = file_path
         self.initialize_graph(controller, file_path)
 
+        #check for invalid file type. just .wav for now
         if not file_path.lower().endswith('.wav'):
             print("This is not a valid .wav file")
             self.audio_path = None
@@ -58,16 +41,22 @@ class Pad(ttk.Button):
         
     def initialize_graph(self, controller, file_path):
         """initalizes instance of waveform editor"""
+
+        #check if waveform editor is already initalized for this pad and update it
+        #if so. waveform editors are saved in dict: waveform_editors in mainwindow.
         if self.pad_id in controller.waveform_editors: 
             controller.waveform_editors[self.pad_id].update_waveform(file_path)
+        #initalize waveform editor in display frame and add it to dict: waveform_editors
         else:
             editor = waveformEditor(controller.display_frame,file_path)
             controller.waveform_editors[self.pad_id] = editor
 
+        #raise editor to front
         controller.show_editor(self.pad_id)
             
 
     def play_audio(self):
+        """plays audio when pad is pressed"""
         if self.audio_path:
             try:            
                 pygame.mixer.init()
@@ -78,9 +67,4 @@ class Pad(ttk.Button):
         else:
             print ("No Audio File Selected")
 
-"""
-if __name__ == "__main__":
-    pervcore = mainWindow()
-    pervcore.mainloop()
-    """
 
