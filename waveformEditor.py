@@ -29,7 +29,7 @@ class waveformEditor(tk.Frame):
 
         self.audio_path = audio_path
         self.playback_start = 0 #define default behavior
-        self.playback_end =  0 
+        self.playback_end =  -1
 
         self.create_graph()
 

@@ -4,6 +4,8 @@ from tkinterdnd2 import TkinterDnD, DND_FILES
 import pygame
 import os
 from waveformEditor import waveformEditor
+from pydub import AudioSegment 
+from pydub.playback import play
 
 
 class Pad(ttk.Button):
@@ -20,7 +22,7 @@ class Pad(ttk.Button):
     def on_trigger(self):
         """wrapper function"""
         if self.audio_path:
-            self.play_audio()
+            self.play_audio(self.controller)
 
         #raises the waveform editor in the main window
         self.controller.show_editor(self.pad_id)
@@ -54,9 +56,25 @@ class Pad(ttk.Button):
         #raise editor to front
         controller.show_editor(self.pad_id)
             
-
-    def play_audio(self):
+    def play_audio(self, controller):
         """plays audio when pad is pressed"""
+        if self.audio_path:
+            try:
+                audio = AudioSegment.from_file(self.audio_path)
+                editor = controller.waveform_editors[self.pad_id] #access associated editor in waveform_editors dict
+                start_time = editor.playback_start
+                end_time = editor.playback_end
+                segment = audio[start_time:end_time]
+                play(segment)
+            except:
+                print(f"Error Playing Audio")
+        else: 
+            print ('No Audio File Selected')
+
+
+"""
+    def play_audio(self):
+        #plays audio when pad is pressed
         if self.audio_path:
             try:            
                 pygame.mixer.init()
@@ -66,5 +84,8 @@ class Pad(ttk.Button):
                 print(f"Error Playing Audio: {e}")
         else:
             print ("No Audio File Selected")
+"""
 
 
+        
+    
