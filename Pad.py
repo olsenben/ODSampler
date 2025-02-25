@@ -1,11 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES
-import pygame
+#import pygame
 import os
 from waveformEditor import waveformEditor
 from pydub import AudioSegment 
-from pydub.playback import play
+#from pydub.playback import play
+#import pyaudio
+import wave
+import numpy as np
+import sounddevice as sd
 
 
 class Pad(ttk.Button):
@@ -55,9 +59,35 @@ class Pad(ttk.Button):
 
         #raise editor to front
         controller.show_editor(self.pad_id)
-            
+
     def play_audio(self, controller):
-        """plays audio when pad is pressed"""
+        #plays audio when pad is pressed
+        if self.audio_path:
+            #try:
+                audio = AudioSegment.from_file(self.audio_path)
+                editor = controller.waveform_editors[self.pad_id] #access associated editor in waveform_editors dict
+                sample_rate = audio.frame_rate
+                start_time = editor.playback_start #convert time to sample indices. I wanted to handle this on the waveframeeditor side but it messes with the draggable line
+                end_time = editor.playback_end
+                print(editor.playback_start, editor.playback_end)
+                print(start_time,end_time)
+                print(sample_rate)
+                samples = np.array(audio.get_array_of_samples())
+                if audio.channels ==2:
+                    samples = samples.reshape((-1,2))
+
+                sliced_samples = samples[start_time:end_time]
+
+                sd.play(sliced_samples, samplerate=sample_rate)
+
+                sd.wait()
+            #except:
+            #    print(f"Error Playing Audio")
+        else: 
+            print ('No Audio File Selected')
+"""            
+    def play_audio(self, controller):
+        #plays audio when pad is pressed
         if self.audio_path:
             try:
                 audio = AudioSegment.from_file(self.audio_path)
@@ -70,7 +100,7 @@ class Pad(ttk.Button):
                 print(f"Error Playing Audio")
         else: 
             print ('No Audio File Selected')
-
+"""
 
 """
     def play_audio(self):
