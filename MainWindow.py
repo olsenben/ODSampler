@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinterdnd2 import TkinterDnD, DND_FILES #make sure to pip install tkinterdnd2-universal
-import pygame
-import os
 from Pad import Pad
+
 
 
 class mainWindow(TkinterDnD.Tk): 
@@ -14,10 +13,9 @@ class mainWindow(TkinterDnD.Tk):
         # Set window title and size dynamically
         self.title(title)
         self.geometry(window_size)
-
         
         # Mframe for waveform editors
-        self.display_frame = ttk.Frame(self, height=200)
+        self.display_frame = ttk.Frame(self, height=250)
         self.display_frame.pack(fill=tk.X, pady=5)
 
         #dict to store waveform_editors
@@ -39,12 +37,13 @@ class mainWindow(TkinterDnD.Tk):
 
     def show_editor(self, pad_id):
         """raise te waveform editor associated with pad"""
-        if pad_id in self.waveform_editors:
+        print(pad_id)
+        if pad_id in self.waveform_editors: #check waveform_editors dict to see if a waveforeditor exists for this pad
             if self.active_editor:
                 self.active_editor.place_forget() #hide acitve editor
-            editor = self.waveform_editors[pad_id]
+            editor = self.waveform_editors[pad_id] #set new editor
             editor.place(relx=0, rely=0, relwidth=1, relheight=1) #make it visible
-            self.active_editor = editor
+            self.active_editor = editor 
 
 
 
