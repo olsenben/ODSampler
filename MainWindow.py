@@ -37,7 +37,6 @@ class mainWindow(TkinterDnD.Tk):
 
     def show_editor(self, pad_id):
         """raise te waveform editor associated with pad"""
-        print(pad_id)
         if pad_id in self.waveform_editors: #check waveform_editors dict to see if a waveforeditor exists for this pad
             if self.active_editor:
                 self.active_editor.place_forget() #hide acitve editor

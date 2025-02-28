@@ -17,17 +17,18 @@ class waveformEditor(tk.Frame):
 
         self.create_graph()
 
-    #function to callback x value from draggable line. will need two of these for defining start and stop time but just do start for now
+    #function to callback x value from draggable line. 
     def start_callback(self, x: float):
-        frame_index = int(x * self.sample_rate)
-        plt.suptitle(f"start pos: {x:0.2f}", x=-.01, y=-0.5, ha='center', va='bottom')
-        self.playback_start = frame_index
+        frame_index = int(x * self.sample_rate) #convert time back into frame index
+        plt.suptitle(f"start pos: {x:0.2f}", x=-.01, y=-0.5, ha='center', va='bottom') #this is not showing up idk why
+        self.playback_start = frame_index #set index 
 
     def end_callback(self, x: float):
         frame_index = int(x * self.sample_rate)
         plt.suptitle(f"end pos: {x:0.2f}", x=0.01, y=-0.5, ha='center', va='bottom')
         self.playback_end = frame_index
 
+    #updates the waveform editor when new file is dropped on the button
     def update_waveform(self, new_file_path, audio_data, sample_rate,):
         self.audio_path = new_file_path
         self.sample_rate = sample_rate
@@ -35,12 +36,13 @@ class waveformEditor(tk.Frame):
         self.playback_start = 0
         self.playback_end = None
 
+        #delete previous widget and create new graph
         for widget in self.winfo_children():
             widget.destroy()
 
-        print("error 5")
         self.create_graph()
 
+    #graphs the associated waveform
     def create_graph(self): 
 
         signal = self.audio_data
