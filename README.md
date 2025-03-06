@@ -14,7 +14,7 @@ Bar-length Looping
 Piano Roll style Sequencer\
 EQ and compressor \
 Normalization\
-Pad Banks\
+Pad Banks
 
 ## Down the Line
 Midi Mapping 
